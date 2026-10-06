@@ -1,0 +1,36 @@
+backend/models/
+*.joblib
+*.pkl
+frontend/node_modules/
+__pycache__/
+*.pyc
+.env.local
+.env.production
+dist/
+build/
+services:
+  - type: web
+    name: cardiac-risk-backend
+    env: python
+    region: oregon
+    plan: free
+    pythonVersion: 3.11
+
+    buildCommand: |
+      pip install -r requirements.txt && \
+      python notebook.py
+
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port 8000
+
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+        {
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist"
+}
+VITE_API_URL=https://your-render-backend-url.onrender.com
+git init
+git add .
+git commit -m "Initial commit: Cardiac Risk Engine"
+git branch -M main

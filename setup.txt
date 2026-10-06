@@ -1,0 +1,469 @@
+# 1. Install Python dependencies
+pip install -r requirements.txt
+
+# 2. Train models
+python notebook.py
+
+# 3. Terminal 1: Start backend
+python backend/main.py
+
+# 4. Terminal 2: Start frontend
+cd frontend
+npm install
+npm run dev
+
+# 5. Open browser
+http://localhost:5173
+pip install pandas==2.2.0 numpy==1.26.4 scikit-learn==1.3.2 xgboost==2.0.3 lightgbm==4.1.0 catboost==1.2.2 joblib==1.3.2 fastapi==0.104.1 uvicorn==0.24.0 pydantic==2.5.0 python-dotenv==1.0.0
+cd frontend
+npm install
+=============================================================================
+CARDIAC RISK ENGINE - SETUP AND RUN ORDER
+=============================================================================
+
+STEP 1: Install Python Backend Dependencies
+-----------------------------------------------
+Command:
+pip install pandas==2.2.0 numpy==1.26.4 scikit-learn==1.3.2 xgboost==2.0.3 lightgbm==4.1.0 catboost==1.2.2 joblib==1.3.2 fastapi==0.104.1 uvicorn==0.24.0 pydantic==2.5.0 python-dotenv==1.0.0
+
+Location: Run from root folder (heart-risk-stack/)
+Time: ~2-3 minutes
+
+Expected Output:
+✅ Successfully installed [package-name]...
+
+
+STEP 2: Train the Model (Generate Model Files)
+-----------------------------------------------
+Command:
+python notebook.py
+
+Location: Run from root folder (heart-risk-stack/)
+Time: ~5-10 minutes
+
+Expected Output:
+✅ Data cleaned. Shape: (xxx, xxx)
+✅ Branch features built
+✅ Meta learner trained
+✅ Final artifacts saved
+
+Output Location:
+backend/models/
+  - tabular_model.joblib
+  - ecg_model.joblib
+  - echo_model.joblib
+  - meta_learner.joblib
+  - tab_preprocessor.joblib
+  - ecg_preprocessor.joblib
+  - echo_preprocessor.joblib
+  - metadata.json
+
+⚠️ IMPORTANT: Must complete before running backend API
+
+
+STEP 3: Install Frontend Dependencies
+-----------------------------------------------
+Command:
+cd frontend
+npm install
+
+Location: Run from frontend/ folder
+Time: ~1-2 minutes
+
+Expected Output:
+added xxx packages in xxx ms
+
+Output Location:
+frontend/node_modules/ (created automatically)
+
+
+STEP 4: Start Backend API (Terminal 1)
+-----------------------------------------------
+Command:
+python backend/main.py
+
+or if file is in root:
+python main.py
+
+Location: Run from root folder (heart-risk-stack/)
+Time: Instant
+
+Expected Output:
+✅ Models loaded
+INFO:     Uvicorn running on http://0.0.0.0:8000
+INFO:     Application startup complete
+
+Test Health Check:
+Open browser: http://localhost:8000/docs
+Should show Swagger API docs
+
+
+STEP 5: Start Frontend (Terminal 2)
+-----------------------------------------------
+Command:
+cd frontend
+npm run dev
+
+Location: Run from frontend/ folder
+Time: Instant
+
+Expected Output:
+VITE v5.0.0  ready in xxx ms
+➜  Local:   http://localhost:5173/
+➜  Press q to quit
+
+Access in Browser:
+http://localhost:5173
+
+
+STEP 6: Test the Application
+-----------------------------------------------
+1. Open http://localhost:5173 in browser
+2. Fill in patient data in sidebar
+3. Click "Predict Risk"
+4. See results + 3D heart visualization
+
+Expected Response:
+{
+  "risk_score": 0.65,
+  "risk_label": "Moderate",
+  "confidence": 0.70,
+  "branch_scores": {
+    "tabular": 0.68,
+    "ecg": 0.62,
+    "echo": 0.65
+  }
+}
+
+
+=============================================================================
+QUICK REFERENCE - RUN COMMANDS IN ORDER
+=============================================================================
+
+1️⃣  pip install pandas==2.2.0 numpy==1.26.4 scikit-learn==1.3.2 xgboost==2.0.3 lightgbm==4.1.0 catboost==1.2.2 joblib==1.3.2 fastapi==0.104.1 uvicorn==0.24.0 pydantic==2.5.0 python-dotenv==1.0.0
+
+2️⃣  python notebook.py
+
+3️⃣  cd frontend && npm install
+
+4️⃣  python backend/main.py          [Terminal 1 - Keep Running]
+
+5️⃣  cd frontend && npm run dev       [Terminal 2 - Keep Running]
+
+6️⃣  Open http://localhost:5173
+
+
+=============================================================================
+TROUBLESHOOTING
+=============================================================================
+
+Problem: "ModuleNotFoundError: No module named 'sklearn'"
+Solution: Run Step 1 again (pip install dependencies)
+
+Problem: "FileNotFoundError: backend/models/tabular_model.joblib"
+Solution: Run Step 2 first (python notebook.py) to generate model files
+
+Problem: "Port 8000 already in use"
+Solution: Change backend port in backend/main.py line:
+  uvicorn.run(app, host="0.0.0.0", port=8001)
+
+Problem: "Port 5173 already in use"
+Solution: Vite will auto-increment to 5174, or edit vite.config.js:
+  server: { port: 5174 }
+
+Problem: "CORS error in browser console"
+Solution: Make sure backend is running on http://localhost:8000
+
+Problem: "Backend shows 'Models not found'"
+Solution: Make sure dataset.csv is in root folder, then run notebook.py
+
+
+=============================================================================
+EXPECTED FILE STRUCTURE
+=============================================================================
+
+heart-risk-stack/
+├── dataset.csv                    (Input data)
+├── notebook.py                    (Training script)
+├── requirements.txt               (Python dependencies)
+├── SETUP_AND_RUN.txt             (This file)
+│
+├── backend/
+│   ├── main.py                   (FastAPI server)
+│   └── models/                   (Generated after Step 2)
+│       ├── tabular_model.joblib
+│       ├── ecg_model.joblib
+│       ├── echo_model.joblib
+│       ├── meta_learner.joblib
+│       ├── tab_preprocessor.joblib
+│       ├── ecg_preprocessor.joblib
+│       ├── echo_preprocessor.joblib
+│       └── metadata.json
+│
+└── frontend/
+    ├── package.json
+    ├── vite.config.js
+    ├── .env.local
+    ├── index.html
+    ├── node_modules/             (Created after Step 3)
+    └── src/
+        ├── main.jsx
+        ├── App.jsx
+        ├── App.css
+        ├── index.css
+        └── components/
+            └── CardiacMesh.jsx
+
+
+=============================================================================
+FINAL CHECKLIST
+=============================================================================
+
+Before running Step 4 & 5:
+☐ Python dependencies installed (Step 1)
+☐ Model files generated in backend/models/ (Step 2)
+☐ Frontend node_modules created (Step 3)
+☐ backend/main.py exists and is correct
+☐ frontend/src/ files all exist
+☐ dataset.csv in root folder
+
+Go Live:
+☐ Start backend (Step 4)
+☐ Start frontend (Step 5)
+☐ Open http://localhost:5173
+☐ Test prediction with sample data
+☐ See 3D heart visualization change color with risk score
+
+=============================================================================
+=============================================================================
+CARDIAC RISK ENGINE - COMPLETE SETUP & DEPLOYMENT
+=============================================================================
+
+FASTEST WAY TO RUN (Copy & Paste in Order)
+=============================================================================
+
+# STEP 1: Install everything
+pip install -r requirements.txt
+cd frontend && npm install && cd ..
+
+# STEP 2: Train models (one time only)
+python notebook.py
+
+# STEP 3: Run backend (Terminal 1)
+python backend/main.py
+
+# STEP 4: Run frontend (Terminal 2)
+cd frontend && npm run dev
+
+# STEP 5: Open browser
+http://localhost:5173
+
+
+=============================================================================
+DEPLOYMENT TO RENDER + VERCEL
+=============================================================================
+
+BACKEND DEPLOYMENT (Render.com)
+-------------------------------
+1. Push to GitHub
+2. Go to render.com → New → Web Service
+3. Connect GitHub repo
+4. Settings:
+   - Build Command: pip install -r requirements.txt
+   - Start Command: uvicorn backend.main:app --host 0.0.0.0 --port 8000
+   - Environment: Add VITE_API_URL = https://your-render-app.onrender.com
+5. Deploy
+
+FRONTEND DEPLOYMENT (Vercel.com)
+---------------------------------
+1. Push to GitHub
+2. Go to vercel.com → New Project → Import Git Repo
+3. Settings:
+   - Framework: Vite
+   - Root Directory: frontend
+   - Build Command: npm run build
+   - Output Directory: dist
+   - Environment: Add VITE_API_URL = https://your-render-app.onrender.com
+4. Deploy
+
+
+=============================================================================
+GIT PUSH CHECKLIST
+=============================================================================
+
+Before pushing to GitHub:
+
+Create .gitignore in root:
+---
+backend/models/
+frontend/node_modules/
+*.pyc
+__pycache__/
+.env.local
+---
+
+Then push:
+git add .
+git commit -m "Cardiac Risk Engine - Complete ML Stack"
+git push origin main
+
+
+=============================================================================
+FILE CHECKLIST - MAKE SURE YOU HAVE THESE
+=============================================================================
+
+Root folder (heart-risk-stack/):
+☐ notebook.py
+☐ requirements.txt
+☐ dataset.csv
+☐ RUN_ME_FIRST.txt (this file)
+☐ .gitignore
+
+backend/ folder:
+☐ main.py
+☐ models/ (created after running notebook.py)
+
+frontend/ folder:
+☐ package.json
+☐ vite.config.js
+☐ index.html
+☐ .env.local
+☐ src/
+  ☐ main.jsx
+  ☐ App.jsx
+  ☐ App.css
+  ☐ index.css
+  ☐ components/CardiacMesh.jsx
+
+
+=============================================================================
+QUICK COMMANDS TO REMEMBER
+=============================================================================
+
+Install dependencies:
+pip install -r requirements.txt && cd frontend && npm install
+
+Train model (generates backend/models/):
+python notebook.py
+
+Run backend:
+python backend/main.py
+
+Run frontend:
+cd frontend && npm run dev
+
+Test API (while backend running):
+curl http://localhost:8000/health
+
+Open app:
+http://localhost:5173
+
+
+=============================================================================
+TROUBLESHOOTING
+=============================================================================
+
+"ModuleNotFoundError"
+→ pip install -r requirements.txt
+
+"Models not found"
+→ python notebook.py (train first)
+
+"Port 8000 already in use"
+→ Edit backend/main.py, change port=8001
+
+"npm: command not found"
+→ Install Node.js from nodejs.org
+
+"Can't connect to backend"
+→ Check backend is running on http://localhost:8000/docs
+
+=============================================================================
+tomorrow 
+# 1. Install
+pip install -r requirements.txt
+cd frontend && npm install && cd ..
+
+# 2. Train models
+python notebook.py
+
+# 3. Terminal 1
+python backend/main.py
+
+# 4. Terminal 2
+cd frontend && npm run dev
+
+# 5. Open
+http://localhost:5173
+vercel
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "env": {
+    "VITE_API_URL": "@vite_api_url"
+  }
+  render
+}VITE_API_URL=https://your-render-backend-url.onrender.com
+render services:
+  - type: web
+    name: cardiac-risk-api
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python notebook.py
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port 8000
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+DEPLOYMENT 
+# Make sure these files exist:(RENDER)
+✅ backend/main.py
+✅ notebook.py
+✅ requirements.txt
+✅ dataset.csv (in root!)
+✅ render.yaml (new file above)
+VERCEL:
+✅ frontend/package.json
+✅ frontend/vite.config.js
+✅ frontend/src/ (all files)
+✅ frontend/.env.production
+✅ frontend/vercel.json
+root/
+├── dataset.csv           ✅ UPLOAD THIS
+├── notebook.py           ✅ UPLOAD THIS
+├── requirements.txt      ✅ UPLOAD THIS
+├── render.yaml           ✅ CREATE THIS
+│
+├── backend/
+│   ├── main.py          ✅ UPLOAD THIS
+│   └── models/          (auto-generated by notebook.py)
+│
+└── frontend/
+    └── ... (Vercel handles this)
+    services:
+  - type: web
+    name: cardiac-risk-backend
+    env: python
+    region: oregon
+    plan: free
+    pythonVersion: 3.11
+    
+    buildCommand: |
+      pip install -r requirements.txt && \
+      python notebook.py
+    
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port 8000
+    
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+        backend/models/
+*.joblib
+*.pkl
+frontend/node_modules/
+*.pyc
+__pycache__/
+.env.local
+.env.production
+node_modules/
+dist/
+build/
